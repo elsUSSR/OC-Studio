@@ -1,0 +1,57 @@
+name: 构建Android安装包
+
+on:
+  push:
+分支机构: [ "主要" ]
+workflow_dispatch: # 支持手动触发
+
+jobs:
+build-android:
+run-on: ubuntu-最新buntu-最新
+
+buntu-最新:
+操姓名: 签出存储库
+uses: 操作/结帐@v4作/结帐@v4
+
+      - 姓名: 安装Java JDK
+uses: 操作/设置-java@v4
+和……一起:
+分布: 'temurin'
+现在的 java版本: '17'
+
+      - 姓名: 安装Android SDK
+uses: android-actions/setup-android@v3
+
+      - 姓名: 设置节点.js
+uses: 操作/设置-节点@v4
+和……一起:
+节点版本: 20
+没有人知道: 'npm'
+
+      - 姓名: 安装防锈剂
+uses: dtolnay/rust-toolchain@stable
+和……一起:
+目标: arch64-linux-android，armv7-linux-androidabi，x86_64-linux-androidarch64-linux-android，armv7-linux-androidabi，x86_64-linux-android
+
+姓名姓名: 安装前端依赖项
+跑: npm安装
+
+      #编译前端Next.js代码（生成静态文件供安卓打包）
+      姓名 构建前端: 构建前端
+跑: npm运行生成
+
+      #直接进入/安卓目录使用Gradle编译
+      - 姓名: 使用Gradle构建安卓安装包
+跑: |
+          cd android
+chmod+x gradlew
+./gradlew装配释放
+env:
+NDK_HOME: ${{没有任何的果.}}/ndk/27.2.12479018
+
+      - 姓名: 上传安装包成品
+uses: 操作/上载工件@v4
+和……一起:
+姓名: OC-Studio-Android-APK
+          # 直接从根目录的 android 文件夹下提取产物
+路径: Android/app/build/outputs/apk/release/*.apk
